@@ -2,35 +2,33 @@ import { Router } from "express";
 import { DiligenceController } from "../controllers/DiligenceController";
 import { authMiddleware, checkRole } from "../middlewares/authMiddleware";
 
-const router = Router();
+const diligenceRoutes = Router();
 const diligenceController = new DiligenceController();
 
-// Todas as rotas de diligência requerem autenticação
-router.use(authMiddleware);
+// Aplica a autenticação a todas as rotas de diligência
+diligenceRoutes.use(authMiddleware);
 
-// Rotas para todos os usuários autenticados
-router.get("/:id", diligenceController.getDiligenceById);
+/**
+ * ROTA PRINCIPAL E UNIFICADA
+ * GET /diligences -> Retorna a lista de diligências apropriada para o utilizador logado.
+ */
+diligenceRoutes.get("/", diligenceController.getAll);
 
-// Rotas para clientes e administradores
-router.post("/", checkRole(["admin", "client"]), diligenceController.createDiligence);
+/**
+ * GET /diligences/available -> Rota específica para correspondentes
+ */
+// A rota original para availableDiligences pode ser mantida se houver lógica específica
+// diligenceRoutes.get("/available", checkRole(["correspondent"]), diligenceController.getAvailableDiligences);
 
-// Rotas específicas para administradores
-router.get("/", checkRole(["admin"]), diligenceController.getAllDiligences);
-router.patch("/:id/assign", checkRole(["admin"]), diligenceController.assignDiligence);
 
-// Rotas específicas para clientes
-router.get("/client/my", checkRole(["client"]), diligenceController.getClientDiligences);
+// Rota para criar diligência
+diligenceRoutes.post("/", checkRole(["admin", "client"]), diligenceController.create);
 
-// Rotas específicas para correspondentes
-router.get("/correspondent/my", checkRole(["correspondent"]), diligenceController.getCorrespondentDiligences);
-router.get("/correspondent/available", checkRole(["correspondent"]), diligenceController.getAvailableDiligences);
-router.patch("/:id/accept", checkRole(["correspondent"]), diligenceController.acceptDiligence);
-router.patch("/:id/start", checkRole(["correspondent"]), diligenceController.startDiligence);
-router.patch("/:id/complete", checkRole(["correspondent"]), diligenceController.completeDiligence);
+// Rotas com ID devem vir depois
+diligenceRoutes.get("/:id", diligenceController.getById);
+diligenceRoutes.patch("/:id/assign", checkRole(["admin"]), diligenceController.assign);
+diligenceRoutes.patch("/:id/accept", checkRole(["correspondent"]), diligenceController.accept);
 
-// Rotas para gerenciamento de status
-router.patch("/:id/status", diligenceController.updateDiligenceStatus);
-router.post("/:id/revert-status", diligenceController.revertDiligenceStatus);
-router.get("/:id/status-history", diligenceController.getDiligenceStatusHistory);
+// ... Adicione aqui as outras rotas PATCH, POST, GET com :id que você tinha ...
 
-export { router as diligenceRoutes };
+export { diligenceRoutes };

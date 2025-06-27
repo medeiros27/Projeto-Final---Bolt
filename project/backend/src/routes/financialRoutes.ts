@@ -2,29 +2,49 @@ import { Router } from "express";
 import { FinancialController } from "../controllers/FinancialController";
 import { authMiddleware, checkRole } from "../middlewares/authMiddleware";
 
-const router = Router();
+const financialRoutes = Router();
 const financialController = new FinancialController();
 
-// Todas as rotas financeiras requerem autenticação
-router.use(authMiddleware);
+// Todas as rotas financeiras requerem autenticação, aplicado a todo o router.
+financialRoutes.use(authMiddleware);
 
-// Rotas para administradores
-router.get("/summary", checkRole(["admin"]), financialController.getFinancialSummary);
-router.get("/data", checkRole(["admin"]), financialController.getAllFinancialData);
-router.get("/diligence/:id", financialController.getFinancialDataByDiligence);
+// --- Rotas para Administradores ---
+financialRoutes.get("/summary", checkRole(["admin"]), financialController.getFinancialSummary);
+financialRoutes.get("/data", checkRole(["admin"]), financialController.getAllFinancialData);
 
-// Rotas para pagamentos
-router.post("/payment-proof/:diligenceId", checkRole(["client"]), financialController.submitPaymentProof);
-router.patch("/payment-proof/:proofId/verify", checkRole(["admin"]), financialController.verifyPaymentProof);
-router.patch("/payment/:diligenceId/client", checkRole(["admin"]), financialController.markClientPaymentAsPaid);
-router.patch("/payment/:diligenceId/correspondent", checkRole(["admin"]), financialController.markCorrespondentPaymentAsPaid);
+// Rota para verificar comprovativo de pagamento
+financialRoutes.patch(
+    "/payment-proof/:proofId/verify", 
+    checkRole(["admin"]), 
+    financialController.verifyPaymentProof
+);
 
-// Rotas para reversão de status de pagamento
-router.post("/payment/:diligenceId/revert-status", checkRole(["admin"]), financialController.revertPaymentStatus);
-router.get("/payment/:diligenceId/status-history", checkRole(["admin"]), financialController.getPaymentStatusHistory);
+// --- Rotas para Utilizadores Autenticados (com lógica de permissão no serviço) ---
+financialRoutes.get(
+    "/diligence/:id", 
+    financialController.getFinancialDataByDiligence
+);
 
-// Rotas para clientes e correspondentes
-router.get("/client", checkRole(["client"]), financialController.getClientFinancialData);
-router.get("/correspondent", checkRole(["correspondent"]), financialController.getCorrespondentFinancialData);
+// Rota para cliente submeter comprovativo
+financialRoutes.post(
+    "/payment-proof/:diligenceId", 
+    checkRole(["client"]), 
+    financialController.submitPaymentProof
+);
 
-export { router as financialRoutes };
+// --- Rotas Específicas de Perfil ---
+financialRoutes.get(
+    "/client-data", 
+    checkRole(["client"]), 
+    // Supondo que você terá um método para isto no seu controlador
+    // financialController.getClientFinancialData 
+);
+
+financialRoutes.get(
+    "/correspondent-data", 
+    checkRole(["correspondent"]), 
+    // Supondo que você terá um método para isto no seu controlador
+    // financialController.getCorrespondentFinancialData 
+);
+
+export { financialRoutes };
