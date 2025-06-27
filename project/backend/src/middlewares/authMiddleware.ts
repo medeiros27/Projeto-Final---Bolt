@@ -3,11 +3,20 @@ import jwt from "jsonwebtoken";
 import { AppError } from "./errorHandler";
 import { UserRepository } from "../repositories/UserRepository";
 
+// Definir o tipo para a carga útil do token
 interface TokenPayload {
   id: string;
-  role: string;
+  role: 'admin' | 'client' | 'correspondent'; // Garantir que o role no token também seja específico
   iat: number;
   exp: number;
+}
+
+// SOLUÇÃO: Corrigir a interface para usar o tipo específico para 'role'
+export interface IAuthRequest extends Request {
+  user: {
+    id: string;
+    role: 'admin' | 'client' | 'correspondent';
+  };
 }
 
 export const authMiddleware = async (
@@ -40,9 +49,10 @@ export const authMiddleware = async (
       throw new AppError("Usuário inativo ou pendente", 401);
     }
 
-    req.user = {
+    // A conversão de tipo agora está consistente com a interface
+    (req as IAuthRequest).user = {
       id: user.id,
-      role: user.role,
+      role: user.role as 'admin' | 'client' | 'correspondent',
     };
 
     return next();
@@ -51,13 +61,15 @@ export const authMiddleware = async (
   }
 };
 
-export const checkRole = (roles: string[]) => {
+export const checkRole = (roles: Array<'admin' | 'client' | 'correspondent'>) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
+    const authRequest = req as IAuthRequest;
+    
+    if (!authRequest.user) {
       throw new AppError("Não autorizado", 401);
     }
 
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(authRequest.user.role)) {
       throw new AppError("Permissão negada", 403);
     }
 

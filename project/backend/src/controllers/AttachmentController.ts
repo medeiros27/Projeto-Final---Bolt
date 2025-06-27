@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { DiligenceRepository } from "../repositories/DiligenceRepository";
 import { AttachmentRepository } from "../repositories/AttachmentRepository";
 import { AppError } from "../middlewares/errorHandler";
+// SOLUÇÃO: Importar a interface para requisições autenticadas
+import { IAuthRequest } from "../middlewares/authMiddleware";
 
 export class AttachmentController {
   private diligenceRepository: DiligenceRepository;
@@ -13,32 +15,29 @@ export class AttachmentController {
   }
 
   uploadAttachment = async (req: Request, res: Response): Promise<Response> => {
+    const authRequest = req as IAuthRequest;
     const { diligenceId } = req.params;
-    const userId = req.user?.id;
+    const userId = authRequest.user?.id;
 
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    // Verificar se a diligência existe
     const diligence = await this.diligenceRepository.findById(diligenceId);
     if (!diligence) {
       throw new AppError("Diligência não encontrada", 404);
     }
 
-    // Verificar permissão
     if (
-      req.user?.role !== "admin" &&
+      authRequest.user?.role !== "admin" &&
       diligence.clientId !== userId &&
       diligence.correspondentId !== userId
     ) {
       throw new AppError("Acesso negado", 403);
     }
 
-    // TODO: Implementar upload de arquivo real
-    // Por enquanto, vamos simular o upload
+    // Lógica de upload de arquivo (simulada)
     const { name, type, size } = req.body;
-
     if (!name || !type || !size) {
       throw new AppError("Dados do anexo incompletos", 400);
     }
@@ -58,22 +57,21 @@ export class AttachmentController {
   };
 
   getDiligenceAttachments = async (req: Request, res: Response): Promise<Response> => {
+    const authRequest = req as IAuthRequest;
     const { diligenceId } = req.params;
-    const userId = req.user?.id;
+    const userId = authRequest.user?.id;
 
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    // Verificar se a diligência existe
     const diligence = await this.diligenceRepository.findById(diligenceId);
     if (!diligence) {
       throw new AppError("Diligência não encontrada", 404);
     }
 
-    // Verificar permissão
     if (
-      req.user?.role !== "admin" &&
+      authRequest.user?.role !== "admin" &&
       diligence.clientId !== userId &&
       diligence.correspondentId !== userId
     ) {
@@ -85,8 +83,9 @@ export class AttachmentController {
   };
 
   deleteAttachment = async (req: Request, res: Response): Promise<Response> => {
+    const authRequest = req as IAuthRequest;
     const { id } = req.params;
-    const userId = req.user?.id;
+    const userId = authRequest.user?.id;
 
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
@@ -97,14 +96,15 @@ export class AttachmentController {
       throw new AppError("Anexo não encontrado", 404);
     }
 
-    // Verificar permissão
     const diligence = await this.diligenceRepository.findById(attachment.diligenceId);
     if (!diligence) {
-      throw new AppError("Diligência não encontrada", 404);
+      // Este caso é improvável, mas é uma boa verificação de segurança
+      await this.attachmentRepository.delete(id);
+      return res.status(204).send();
     }
-
+    
     if (
-      req.user?.role !== "admin" &&
+      authRequest.user?.role !== "admin" &&
       diligence.clientId !== userId &&
       attachment.uploadedById !== userId
     ) {

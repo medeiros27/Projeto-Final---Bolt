@@ -1,4 +1,4 @@
-import { User, Diligence, Payment, QualityMetrics, AssignmentCriteria } from '../types';
+import { User, Diligence, Payment, QualityMetrics, AssignmentCriteria } from '../@types';
 import { mockUsers, mockDiligences } from '../data/mockData';
 
 class PlatformService {

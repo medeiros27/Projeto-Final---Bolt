@@ -36,6 +36,14 @@ export class FinancialRepository {
       relations: ["diligence", "client", "correspondent"],
     });
   }
+    
+  // SOLUÇÃO: Adicionar o método que estava faltando.
+  async findAllPayments(): Promise<Payment[]> {
+    return this.paymentRepository.find({
+        relations: ["diligence", "client", "correspondent"],
+        order: { createdAt: "DESC" }
+    });
+  }
 
   async findPaymentsByDiligence(diligenceId: string): Promise<Payment[]> {
     return this.paymentRepository.find({

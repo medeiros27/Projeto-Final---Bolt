@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/UserRepository";
 import { AppError } from "../middlewares/errorHandler";
+// Importar a interface IAuthRequest do nosso middleware
+import { IAuthRequest } from "../middlewares/authMiddleware";
 
 export class UserController {
   private userRepository: UserRepository;
@@ -32,7 +34,6 @@ export class UserController {
       throw new AppError("Dados obrigatórios não fornecidos", 400);
     }
 
-    // Verificar se email já existe
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new AppError("Email já está em uso", 400);
@@ -41,7 +42,7 @@ export class UserController {
     const user = await this.userRepository.create({
       name,
       email,
-      password, // Será criptografado no service
+      password,
       role,
       status: status || "active",
       phone,
@@ -59,12 +60,14 @@ export class UserController {
     });
   };
 
+  // 2. Mantenha a assinatura padrão e faça a conversão de tipo internamente
   getProfile = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user || !req.user.id) {
+    const authRequest = req as IAuthRequest;
+    if (!authRequest.user || !authRequest.user.id) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const userId = req.user.id;
+    const userId = authRequest.user.id;
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
@@ -74,12 +77,14 @@ export class UserController {
     return res.json(user);
   };
 
+  // 3. Fazer o mesmo para updateProfile
   updateProfile = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user || !req.user.id) {
+    const authRequest = req as IAuthRequest;
+    if (!authRequest.user || !authRequest.user.id) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const userId = req.user.id;
+    const userId = authRequest.user.id;
     const { name, phone, city, state, address } = req.body;
 
     const updatedUser = await this.userRepository.update(userId, {

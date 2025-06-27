@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Notification } from "../entities/Notification";
 
-export class NotificationService {
+class NotificationService {
   private repository: Repository<Notification>;
 
   constructor() {
@@ -52,3 +52,6 @@ export class NotificationService {
     await this.repository.delete(notificationId);
   }
 }
+
+// SOLUÇÃO: Exportar uma instância única da classe como padrão.
+export default new NotificationService();

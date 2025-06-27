@@ -10,21 +10,17 @@ export interface User {
   oab?: string;
   city?: string;
   state?: string;
-  // Client specific fields
   companyName?: string;
   cnpj?: string;
   address?: string;
-  // Correspondent specific fields
   specialties?: string[];
   coverage?: string[];
   rating?: number;
   totalDiligences?: number;
   completionRate?: number;
   responseTime?: number;
-  // Verification
   verified?: boolean;
   verificationDocuments?: VerificationDocument[];
-  // Subscription
   subscription?: Subscription;
 }
 
@@ -58,7 +54,7 @@ export interface Diligence {
   type: string;
   status: 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled' | 'disputed';
   priority: 'low' | 'medium' | 'high' | 'urgent';
-  value: number; // Valor único da diligência
+  value: number;
   deadline: string;
   clientId: string;
   correspondentId?: string;
@@ -69,32 +65,23 @@ export interface Diligence {
   attachments: Attachment[];
   client: User;
   correspondent?: User;
-  // Status history for reverting
   statusHistory?: string[];
-  // Financial tracking (admin only)
   financialData?: DiligenceFinancialData;
-  // Payment proof
   paymentProof?: PaymentProof;
-  // Communication
   messages?: Message[];
-  // Tracking
   timeline?: TimelineEvent[];
 }
 
 export interface DiligenceFinancialData {
   id: string;
   diligenceId: string;
-  // Valores (admin only)
-  faturado: number; // Valor total faturado ao cliente
-  custo: number; // Custo para executar (valor do correspondente)
-  lucro: number; // Lucro da operação (faturado - custo)
-  // Status de pagamento
+  faturado: number;
+  custo: number;
+  lucro: number;
   clientPaymentStatus: 'pending' | 'paid' | 'overdue';
   correspondentPaymentStatus: 'pending' | 'paid' | 'scheduled';
-  // Datas
   clientPaymentDate?: string;
   correspondentPaymentDate?: string;
-  // Observações
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -106,7 +93,7 @@ export interface PaymentProof {
   type: 'client_payment' | 'correspondent_payment';
   amount: number;
   pixKey?: string;
-  proofImage: string; // URL da imagem do comprovante
+  proofImage: string;
   status: 'pending_verification' | 'verified' | 'rejected';
   uploadedBy: string;
   uploadedAt: string;
@@ -117,24 +104,15 @@ export interface PaymentProof {
 }
 
 export interface FinancialSummary {
-  // Totais gerais (admin only)
-  totalFaturado: number; // Total faturado aos clientes
-  totalLucro: number; // Total de lucro
-  totalCusto: number; // Total de custos (pagamentos aos correspondentes)
-  
-  // A receber/pagar (admin only)
-  totalReceberá: number; // Total que ainda receberá dos clientes
-  totalPagará: number; // Total que ainda pagará aos correspondentes
-  
-  // Já movimentado (admin only)
-  totalPago: number; // Total já pago aos correspondentes
-  totalRecebido: number; // Total já recebido dos clientes
-  
-  // Métricas (admin only)
-  margemLucro: number; // Percentual de margem de lucro
-  ticketMedio: number; // Ticket médio por diligência
-  
-  // Por período (admin only)
+  totalFaturado: number;
+  totalLucro: number;
+  totalCusto: number;
+  totalReceberá: number;
+  totalPagará: number;
+  totalPago: number;
+  totalRecebido: number;
+  margemLucro: number;
+  ticketMedio: number;
   faturadoMes: number;
   lucroMes: number;
   recebidoMes: number;
@@ -147,7 +125,7 @@ export interface Payment {
   type: 'client_payment' | 'correspondent_payment';
   amount: number;
   status: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
-  method: 'pix'; // Apenas PIX
+  method: 'pix';
   pixKey?: string;
   dueDate?: string;
   paidDate?: string;
@@ -201,6 +179,7 @@ export interface DashboardStats {
   monthlyGrowth: number;
 }
 
+// SOLUÇÃO: Adicionar a interface Notification aqui
 export interface Notification {
   id: string;
   userId: string;
@@ -211,6 +190,7 @@ export interface Notification {
   read: boolean;
   createdAt: string;
 }
+
 
 export interface QualityMetrics {
   correspondentId: string;

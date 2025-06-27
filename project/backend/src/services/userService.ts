@@ -1,4 +1,4 @@
-import { User } from '../types';
+import { User } from '../@types';
 import { UserFormData } from '../components/Forms/UserForm';
 
 // Simulação de API - em produção, isso seria substituído por chamadas HTTP reais

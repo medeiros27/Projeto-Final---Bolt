@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useDiligences } from '../hooks/useDiligences';
+// SOLUÇÃO: Corrigir o caminho da importação para apontar para o diretório correto
 import { mockDashboardStats, mockDiligences } from '../data/mockData';
 import StatsCard from '../components/Dashboard/StatsCard';
 import CorrespondentDashboard from '../components/Dashboard/CorrespondentDashboard';
@@ -94,7 +95,7 @@ const Dashboard: React.FC = () => {
               {loading ? (
                 <div className="flex items-center space-x-2">
                   <LoadingSpinner size="sm" />
-                  <span className="text-blue-100">Calculando...</span>
+                  <span className="text-blue-100">A calcular...</span>
                 </div>
               ) : (
                 <div className="text-4xl font-bold mb-2">
@@ -133,7 +134,7 @@ const Dashboard: React.FC = () => {
         />
         <StatsCard
           title="Lucro Mensal"
-          value={loading ? 'Calculando...' : formatCurrency(monthlyProfit)}
+          value={loading ? 'A calcular...' : formatCurrency(monthlyProfit)}
           icon={PiggyBank}
           color="green"
           trend={{ value: mockDashboardStats.monthlyGrowth, isPositive: true }}
@@ -190,7 +191,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Lucro Mensal</span>
               <span className="font-semibold text-green-600">
-                {loading ? 'Calculando...' : formatCurrency(monthlyProfit)}
+                {loading ? 'A calcular...' : formatCurrency(monthlyProfit)}
               </span>
             </div>
             <div className="flex items-center justify-between">

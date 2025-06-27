@@ -1,4 +1,4 @@
-import { Diligence, User, DashboardStats } from '../types';
+import { Diligence, User, DashboardStats } from '../@types';
 
 export const mockUsers: User[] = [
   {

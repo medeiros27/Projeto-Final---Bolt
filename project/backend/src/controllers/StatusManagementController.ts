@@ -1,18 +1,20 @@
 import { Request, Response } from "express";
-import { StatusManagementService } from "../services/StatusManagementService";
+// SOLUÇÃO: Os serviços devem ser importados como padrão
+import statusManagementService from "../services/StatusManagementService";
 import { StatusHistoryRepository } from "../repositories/StatusHistoryRepository";
 import { AppError } from "../middlewares/errorHandler";
+// SOLUÇÃO: Importar a interface para requisições autenticadas
+import { IAuthRequest } from "../middlewares/authMiddleware";
 
 export class StatusManagementController {
-  private statusManagementService: StatusManagementService;
   private statusHistoryRepository: StatusHistoryRepository;
 
   constructor() {
-    this.statusManagementService = new StatusManagementService();
     this.statusHistoryRepository = new StatusHistoryRepository();
   }
 
   canRevertStatus = async (req: Request, res: Response): Promise<Response> => {
+    const authRequest = req as IAuthRequest;
     const { 
       entityId, 
       entityType, 
@@ -23,8 +25,8 @@ export class StatusManagementController {
       paymentType?: 'client' | 'correspondent';
     };
 
-    const userId = req.user?.id;
-    const userRole = req.user?.role;
+    const userId = authRequest.user?.id;
+    const userRole = authRequest.user?.role;
 
     if (!userId || !userRole) {
       throw new AppError("Usuário não autenticado", 401);
@@ -34,10 +36,10 @@ export class StatusManagementController {
       throw new AppError("Parâmetros obrigatórios não fornecidos", 400);
     }
 
-    const result = await this.statusManagementService.canRevertStatus(
+    const result = await statusManagementService.canRevertStatus(
       entityId,
       entityType,
-      userRole as any,
+      userRole,
       userId,
       paymentType
     );
@@ -46,6 +48,7 @@ export class StatusManagementController {
   };
 
   revertStatus = async (req: Request, res: Response): Promise<Response> => {
+    const authRequest = req as IAuthRequest;
     const { 
       entityId, 
       entityType, 
@@ -54,7 +57,7 @@ export class StatusManagementController {
       paymentType 
     } = req.body;
 
-    const userId = req.user?.id;
+    const userId = authRequest.user?.id;
 
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
@@ -68,7 +71,7 @@ export class StatusManagementController {
       throw new AppError("Tipo de pagamento é obrigatório para reversão de pagamentos", 400);
     }
 
-    const result = await this.statusManagementService.revertStatus(
+    const result = await statusManagementService.revertStatus(
       entityId,
       entityType,
       targetStatus,
