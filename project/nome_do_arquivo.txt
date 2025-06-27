@@ -1,0 +1,238 @@
+Listagem de caminhos de pasta
+O número de série do volume é 62AF-F371
+C:.
+¦   .gitignore
+¦   API.md
+¦   eslint.config.js
+¦   index.html
+¦   init-db.sh
+¦   nome_do_arquivo.txt
+¦   package-lock.json
+¦   postcss.config.js
+¦   README.md
+¦   SETUP.md
+¦   tailwind.config.js
+¦   tsconfig.app.json
+¦   tsconfig.node.json
+¦   vite.config.ts
+¦   vitest.config.ts
+¦   
++---.bolt
+¦       config.json
+¦       prompt
+¦       
++---backend
+¦   ¦   .env
+¦   ¦   package.json
+¦   ¦   tsconfig.json
+¦   ¦   
+¦   +---src
+¦       ¦   index.ts
+¦       ¦   
+¦       +---controllers
+¦       ¦       AttachmentController.ts
+¦       ¦       AuthController.ts
+¦       ¦       DiligenceController.ts
+¦       ¦       FinancialController.ts
+¦       ¦       NotificationController.ts
+¦       ¦       StatusManagementController.ts
+¦       ¦       UserController.ts
+¦       ¦       
+¦       +---data
+¦       ¦       mockData.ts
+¦       ¦       
+¦       +---entities
+¦       ¦       Attachment.ts
+¦       ¦       Diligence.ts
+¦       ¦       Notification.ts
+¦       ¦       Payment.ts
+¦       ¦       PaymentProof.ts
+¦       ¦       StatusHistory.ts
+¦       ¦       User.ts
+¦       ¦       
+¦       +---middlewares
+¦       ¦       authMiddleware.ts
+¦       ¦       errorHandler.ts
+¦       ¦       
+¦       +---migrations
+¦       ¦       1750980000000-CreateInitialSchema.ts
+¦       ¦       
+¦       +---repositories
+¦       ¦       AttachmentRepository.ts
+¦       ¦       DiligenceRepository.ts
+¦       ¦       FinancialRepository.ts
+¦       ¦       NotificationRepository.ts
+¦       ¦       StatusHistoryRepository.ts
+¦       ¦       UserRepository.ts
+¦       ¦       
+¦       +---routes
+¦       ¦       attachmentRoutes.ts
+¦       ¦       authRoutes.ts
+¦       ¦       diligenceRoutes.ts
+¦       ¦       financialRoutes.ts
+¦       ¦       notificationRoutes.ts
+¦       ¦       statusRoutes.ts
+¦       ¦       userRoutes.ts
+¦       ¦       
+¦       +---scripts
+¦       ¦       createDatabase.ts
+¦       ¦       seed.ts
+¦       ¦       
+¦       +---services
+¦       ¦       AuthService.ts
+¦       ¦       diligenceService.ts
+¦       ¦       financialService.ts
+¦       ¦       NotificationService.ts
+¦       ¦       platformService.ts
+¦       ¦       statusManagementService.ts
+¦       ¦       userService.ts
+¦       ¦       
+¦       +---test
+¦       ¦   +---utils
+¦       +---types
+¦               express.d.ts
+¦               index.ts
+¦               
++---frontend
+¦   ¦   package.json
+¦   ¦   
+¦   +---src
+¦       ¦   App.tsx
+¦       ¦   data-source.ts
+¦       ¦   index.css
+¦       ¦   main.tsx
+¦       ¦   vite-env.d.ts
+¦       ¦   
+¦       +---components
+¦       ¦   +---Agenda
+¦       ¦   ¦       AdminAgenda.tsx
+¦       ¦   ¦       AgendaManager.tsx
+¦       ¦   ¦       ClientAgenda.tsx
+¦       ¦   ¦       CorrespondentAgenda.tsx
+¦       ¦   ¦       
+¦       ¦   +---Dashboard
+¦       ¦   ¦       CorrespondentDashboard.tsx
+¦       ¦   ¦       StatsCard.tsx
+¦       ¦   ¦       
+¦       ¦   +---Forms
+¦       ¦   ¦   ¦   DiligenceForm.tsx
+¦       ¦   ¦   ¦   UserForm.tsx
+¦       ¦   ¦   ¦   
+¦       ¦   ¦   +---__tests__
+¦       ¦   ¦           DiligenceForm.test.tsx
+¦       ¦   ¦           
+¦       ¦   +---Layout
+¦       ¦   ¦       Breadcrumb.tsx
+¦       ¦   ¦       Header.tsx
+¦       ¦   ¦       Layout.tsx
+¦       ¦   ¦       Sidebar.tsx
+¦       ¦   ¦       
+¦       ¦   +---Modals
+¦       ¦   ¦       ConfirmModal.tsx
+¦       ¦   ¦       Modal.tsx
+¦       ¦   ¦       
+¦       ¦   +---Notifications
+¦       ¦   ¦       NotificationCenter.tsx
+¦       ¦   ¦       
+¦       ¦   +---PaymentManagement
+¦       ¦   ¦       PaymentStatusManager.tsx
+¦       ¦   ¦       
+¦       ¦   +---PaymentProof
+¦       ¦   ¦       PaymentProofUpload.tsx
+¦       ¦   ¦       PaymentProofVerification.tsx
+¦       ¦   ¦       
+¦       ¦   +---StatusManagement
+¦       ¦   ¦       StatusHistoryModal.tsx
+¦       ¦   ¦       StatusReversionModal.tsx
+¦       ¦   ¦       
+¦       ¦   +---UI
+¦       ¦   ¦   ¦   Badge.tsx
+¦       ¦   ¦   ¦   Button.tsx
+¦       ¦   ¦   ¦   Card.tsx
+¦       ¦   ¦   ¦   EmptyState.tsx
+¦       ¦   ¦   ¦   ErrorBoundary.tsx
+¦       ¦   ¦   ¦   ErrorState.tsx
+¦       ¦   ¦   ¦   LoadingSpinner.tsx
+¦       ¦   ¦   ¦   LoadingState.tsx
+¦       ¦   ¦   ¦   Pagination.tsx
+¦       ¦   ¦   ¦   Skeleton.tsx
+¦       ¦   ¦   ¦   Toast.tsx
+¦       ¦   ¦   ¦   ToastContainer.tsx
+¦       ¦   ¦   ¦   Users.tsx
+¦       ¦   ¦   ¦   
+¦       ¦   ¦   +---__tests__
+¦       ¦   ¦           Button.test.tsx
+¦       ¦   ¦           Card.test.tsx
+¦       ¦   ¦           
+¦       ¦   +---Workflow
+¦       ¦           DiligenceWorkflow.tsx
+¦       ¦           
+¦       +---contexts
+¦       ¦       AuthContext.tsx
+¦       ¦       
+¦       +---hooks
+¦       ¦   ¦   useApi.ts
+¦       ¦   ¦   useDebounce.ts
+¦       ¦   ¦   useDiligences.ts
+¦       ¦   ¦   useLocalStorage.ts
+¦       ¦   ¦   usePagination.ts
+¦       ¦   ¦   useUsers.ts
+¦       ¦   ¦   
+¦       ¦   +---__tests__
+¦       ¦           useLocalStorage.test.ts
+¦       ¦           
+¦       +---pages
+¦       ¦       AvailableDiligences.tsx
+¦       ¦       Calendar.tsx
+¦       ¦       ClientRegistration.tsx
+¦       ¦       CorrespondentRegistration.tsx
+¦       ¦       Correspondents.tsx
+¦       ¦       Dashboard.tsx
+¦       ¦       DiligenceDetails.tsx
+¦       ¦       Diligences.tsx
+¦       ¦       EditDiligence.tsx
+¦       ¦       Financial.tsx
+¦       ¦       Login.tsx
+¦       ¦       NewDiligence.tsx
+¦       ¦       NewUser.tsx
+¦       ¦       PaymentManagement.tsx
+¦       ¦       PlatformDashboard.tsx
+¦       ¦       Reports.tsx
+¦       ¦       Settings.tsx
+¦       ¦       StatusManagementPage.tsx
+¦       ¦       Users.tsx
+¦       ¦       
+¦       +---scripts
+¦       ¦       createDatabase.ts
+¦       ¦       seed.ts
+¦       ¦       
+¦       +---services
+¦       ¦       AuthService.ts
+¦       ¦       diligenceService.ts
+¦       ¦       financialService.ts
+¦       ¦       NotificationService.ts
+¦       ¦       platformService.ts
+¦       ¦       statusManagementService.ts
+¦       ¦       userService.ts
+¦       ¦       
+¦       +---test
+¦       ¦   ¦   setup.ts
+¦       ¦   ¦   
+¦       ¦   +---utils
+¦       ¦           test-utils.tsx
+¦       ¦           
+¦       +---types
+¦       ¦       index.ts
+¦       ¦       
+¦       +---utils
+¦           ¦   constants.ts
+¦           ¦   formatters.ts
+¦           ¦   validation.ts
+¦           ¦   
+¦           +---__tests__
+¦                   formatters.test.ts
+¦                   validation.test.ts
+¦                   
++---public
+        logotipo.png
+        
