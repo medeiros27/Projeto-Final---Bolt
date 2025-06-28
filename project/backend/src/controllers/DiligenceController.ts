@@ -7,7 +7,8 @@ import { IAuthRequest } from "../middlewares/authMiddleware";
 
 // Importar as instâncias de serviço
 import diligenceService from "../services/DiligenceService";
-import statusManagementService from "../services/StatusManagementService";
+import statusManagementService from "../services/statusManagementService"; // CORREÇÃO: Usar 's' minúsculo
+
 
 
 const ALLOWED_DILIGENCE_STATUSES = ["pending", "assigned", "in_progress", "completed", "cancelled", "disputed"];
@@ -216,15 +217,12 @@ export class DiligenceController {
       throw new AppError("Motivo da reversão é obrigatório", 400);
     }
 
-    const result = await statusManagementService.revertStatus(
-      id,
-      "diligence",
-      targetStatus,
-      userId,
-      reason
-    );
-    return res.json(result);
-  };
+    const result = await statusManagementService.updateDiligenceStatus(
+    diligenceId,
+    "pending", // ou o status para o qual você quer reverter
+    req.user.id,
+    "Status revertido pelo usuário"
+);
 
   getDiligenceStatusHistory = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;

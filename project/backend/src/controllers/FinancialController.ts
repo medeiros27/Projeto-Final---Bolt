@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import financialService from '../services/FinancialService';
-import statusManagementService from '../services/StatusManagementService';
+import statusManagementService from '../services/statusManagementService'; // CORREÇÃO: Usar 's' minúsculo
 import { IAuthRequest } from '../middlewares/authMiddleware';
 
 /**

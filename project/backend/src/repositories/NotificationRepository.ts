@@ -1,15 +1,16 @@
 import { AppDataSource } from "../data-source";
 import { Notification } from "../entities/Notification";
-import { Repository } from "typeorm";
+import { Repository, DeleteResult } from "typeorm";
 
 export class NotificationRepository extends Repository<Notification> {
   constructor() {
     super(Notification, AppDataSource.manager);
   }
 
-  async create(notificationData: Partial<Notification>): Promise<Notification> {
-    const notification = this.create(notificationData);
-    return this.save(notification);
+  // Renomeado de 'create' para 'createNotification' para evitar conflito com o método base do TypeORM
+  async createNotification(notificationData: Partial<Notification>): Promise<Notification> {
+    const notification = this.create(notificationData); // Usa o método 'create' da classe base Repository
+    return this.save(notification); // Usa o método 'save' da classe base Repository
   }
 
   async findById(id: string): Promise<Notification | null> {
@@ -39,7 +40,9 @@ export class NotificationRepository extends Repository<Notification> {
       .execute();
   }
 
-  async delete(id: string): Promise<void> {
-    await this.delete(id);
+  // Renomeado de 'delete' para 'deleteNotification' para evitar conflito e corrigida a implementação
+  async deleteNotification(id: string): Promise<DeleteResult> {
+    const result = await super.delete(id); // Chama o método 'delete' da classe pai (Repository)
+    return result;
   }
 }
