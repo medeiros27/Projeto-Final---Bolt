@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { Diligence } from "../entities/Diligence";
-import { Repository } from "typeorm";
+import { Repository, DeleteResult, UpdateResult } from "typeorm"; // Adicionado UpdateResult e DeleteResult
 import { AppError } from "../middlewares/errorHandler";
 
 export class DiligenceRepository extends Repository<Diligence> {
@@ -21,24 +21,31 @@ export class DiligenceRepository extends Repository<Diligence> {
     });
   }
 
-  async create(diligenceData: Partial<Diligence>): Promise<Diligence> {
-    const diligence = this.create(diligenceData);
-    return this.save(diligence);
+  // Renomeado de 'create' para 'createDiligence' para evitar conflito com o método base do TypeORM
+  async createDiligence(diligenceData: Partial<Diligence>): Promise<Diligence> {
+    const diligence = this.create(diligenceData); // Usa o método 'create' da classe base Repository
+    return this.save(diligence); // Usa o método 'save' da classe base Repository
   }
 
-  async update(id: string, diligenceData: Partial<Diligence>): Promise<Diligence> {
-    const diligence = await this.findById(id);
+  // Renomeado de 'update' para 'updateDiligence' para evitar conflito com o método base do TypeORM
+  async updateDiligence(id: string, diligenceData: Partial<Diligence>): Promise<Diligence> {
+    const diligence = await this.findById(id); // Usa o método findById personalizado
     
     if (!diligence) {
       throw new AppError("Diligência não encontrada", 404);
     }
     
-    this.merge(diligence, diligenceData);
-    return this.save(diligence);
+    this.merge(diligence, diligenceData); // Usa o método 'merge' da classe base Repository
+    return this.save(diligence); // Usa o método 'save' da classe base Repository
   }
 
-  async delete(id: string): Promise<void> {
-    await this.delete(id);
+  // Renomeado de 'delete' para 'deleteDiligence' para evitar conflito e corrigida a implementação
+  async deleteDiligence(id: string): Promise<DeleteResult> { // Retorna DeleteResult
+    const result = await super.delete(id); // Chama o método 'delete' da classe pai (Repository)
+    if (result.affected === 0) {
+      throw new AppError("Diligência não encontrada para exclusão", 404);
+    }
+    return result;
   }
 
   async findByClient(clientId: string): Promise<Diligence[]> {

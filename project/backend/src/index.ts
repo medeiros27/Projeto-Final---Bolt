@@ -9,12 +9,12 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { AppDataSource } from "./data-source";
 import { errorHandler } from "./middlewares/errorHandler";
-import { authRoutes } from "./routes/authRoutes";
-import { userRoutes } from "./routes/userRoutes";
-import { diligenceRoutes } from "./routes/diligenceRoutes";
-import { financialRoutes } from "./routes/financialRoutes";
-import { notificationRoutes } from "./routes/notificationRoutes";
-import { platformRoutes } from "./routes/platformRoutes"; 
+import authRoutes from "./routes/authRoutes"; // Importação padrão
+import userRoutes from "./routes/userRoutes"; // Importação padrão
+import diligenceRoutes from "./routes/diligenceRoutes"; // CORREÇÃO: Importação padrão
+import financialRoutes from "./routes/financialRoutes"; // Importação padrão
+import notificationRoutes from "./routes/notificationRoutes"; // Importação padrão
+import platformRoutes from "./routes/platformRoutes"; // Importação padrão
 
 AppDataSource.initialize()
   .then(() => {

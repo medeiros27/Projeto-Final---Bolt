@@ -11,14 +11,14 @@ import { User } from "./User";
 @Entity("notifications")
 export class Notification {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @ManyToOne(() => User, (user) => user.notifications)
   @JoinColumn({ name: "userId" })
-  user: User;
+  user!: User;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @Column({
     type: "enum",
@@ -30,24 +30,20 @@ export class Notification {
       "system_update",
     ],
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  type: "diligence_assigned" | "payment_received" | "deadline_reminder" | "feedback_received" | "system_update";
+  type!: "diligence_assigned" | "payment_received" | "deadline_reminder" | "feedback_received" | "system_update";
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column("text")
-  message: string;
+  message!: string;
 
   @Column("jsonb", { nullable: true })
-  data?: Record<string, any>; // Usar "?" para propriedades opcionais
+  data?: Record<string, any>;
 
   @Column({ default: false })
-  read: boolean;
+  read!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
-
-  // @UpdateDateColumn() // Opcional: Adicione se precisar de uma coluna de data de atualização
-  // updatedAt: Date;
+  createdAt!: Date;
 }

@@ -13,4 +13,5 @@ platformRoutes.get(
   platformController.getAnalytics
 );
 
-export { platformRoutes };
+export default router;
+

@@ -13,7 +13,7 @@ interface TokenPayload {
 
 // SOLUÇÃO: Corrigir a interface para usar o tipo específico para 'role'
 export interface IAuthRequest extends Request {
-  user: {
+  user?: {
     id: string;
     role: 'admin' | 'client' | 'correspondent';
   };
@@ -39,7 +39,8 @@ export const authMiddleware = async (
     ) as TokenPayload;
 
     const userRepository = new UserRepository();
-    const user = await userRepository.findById(decoded.id);
+    // CORREÇÃO: Usar findOneBy em vez de findById
+    const user = await userRepository.findOneBy({ id: decoded.id });
 
     if (!user) {
       throw new AppError("Usuário não encontrado", 401);

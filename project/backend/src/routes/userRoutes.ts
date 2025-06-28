@@ -21,4 +21,4 @@ router.get("/profile", userController.getProfile);
 router.patch("/profile", userController.updateProfile);
 router.get("/:id", userController.getUserById);
 
-export { router as userRoutes };
+export default router;

@@ -13,30 +13,30 @@ import { Payment } from "./Payment";
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  id!: string; // Adicionado '!'
+  id!: string;
 
   @Column()
-  name!: string; // Adicionado '!'
+  name!: string;
 
   @Column({ unique: true })
-  email!: string; // Adicionado '!'
+  email!: string;
 
   @Column({ select: false })
-  password!: string; // Adicionado '!'
+  password!: string;
 
   @Column({
     type: "enum",
     enum: ["admin", "client", "correspondent"],
     default: "client",
   })
-  role!: "admin" | "client" | "correspondent"; // Adicionado '!'
+  role!: "admin" | "client" | "correspondent";
 
   @Column({
     type: "enum",
     enum: ["active", "pending", "inactive", "suspended"],
     default: "pending",
   })
-  status!: "active" | "pending" | "inactive" | "suspended"; // Adicionado '!'
+  status!: "active" | "pending" | "inactive" | "suspended";
 
   @Column({ nullable: true })
   phone?: string;
@@ -60,7 +60,7 @@ export class User {
   address?: string;
 
   @Column({ default: false })
-  verified!: boolean; // Adicionado '!'
+  verified!: boolean;
 
   @Column("simple-array", { nullable: true })
   specialties?: string[];
@@ -81,23 +81,23 @@ export class User {
   responseTime?: number;
 
   @OneToMany(() => Diligence, (diligence) => diligence.client)
-  clientDiligences!: Diligence[]; // Adicionado '!'
+  clientDiligences!: Diligence[];
 
   @OneToMany(() => Diligence, (diligence) => diligence.correspondent)
-  correspondentDiligences!: Diligence[]; // Adicionado '!'
+  correspondentDiligences!: Diligence[];
 
   @OneToMany(() => Notification, (notification) => notification.user)
-  notifications!: Notification[]; // Adicionado '!'
+  notifications!: Notification[];
 
   @OneToMany(() => Payment, (payment) => payment.client)
-  clientPayments!: Payment[]; // Adicionado '!'
+  clientPayments!: Payment[];
 
   @OneToMany(() => Payment, (payment) => payment.correspondent)
-  correspondentPayments!: Payment[]; // Adicionado '!'
+  correspondentPayments!: Payment[];
 
   @CreateDateColumn()
-  createdAt!: Date; // Adicionado '!'
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt!: Date; // Adicionado '!'
+  updatedAt!: Date;
 }

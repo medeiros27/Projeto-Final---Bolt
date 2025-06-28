@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn, // Adicionado para consistência
+  UpdateDateColumn,
   ManyToOne,
   JoinColumn,
 } from "typeorm";
@@ -13,37 +13,37 @@ import { User } from "./User";
 @Entity("attachments")
 export class Attachment {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  url: string;
+  url!: string;
 
   @Column()
-  type: string; // Se houver tipos específicos (ex: 'image', 'pdf'), pode ser um enum
+  type!: string; // Se houver tipos específicos (ex: \'image\', \'pdf\'), pode ser um enum
 
   @Column("int")
-  size: number;
+  size!: number;
 
   @ManyToOne(() => Diligence, (diligence) => diligence.attachments)
   @JoinColumn({ name: "diligenceId" })
-  diligence: Diligence;
+  diligence!: Diligence;
 
   @Column()
-  diligenceId: string;
+  diligenceId!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "uploadedById" })
-  uploadedBy: User;
+  uploadedBy!: User;
 
   @Column()
-  uploadedById: string;
+  uploadedById!: string;
 
   @CreateDateColumn()
-  uploadedAt: Date;
+  uploadedAt!: Date;
 
-  @UpdateDateColumn() // Adicionado para registrar a última atualização
-  updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

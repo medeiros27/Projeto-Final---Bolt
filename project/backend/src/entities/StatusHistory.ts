@@ -12,47 +12,43 @@ import { User } from "./User";
 @Entity("status_history")
 export class StatusHistory {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
-  @ManyToOne(() => Diligence, (diligence) => diligence.statusHistory, { nullable: true }) // Diligence pode ser opcional
+  @ManyToOne(() => Diligence, (diligence) => diligence.statusHistory, { nullable: true })
   @JoinColumn({ name: "diligenceId" })
-  diligence?: Diligence; // Usar "?" para indicar que pode ser undefined
+  diligence?: Diligence;
 
   @Column({ nullable: true })
-  diligenceId?: string; // Usar "?" para propriedades opcionais
+  diligenceId?: string;
 
   @Column({ nullable: true })
-  paymentId?: string; // Usar "?" para propriedades opcionais
+  paymentId?: string;
 
   @Column({
     type: "enum",
     enum: ["diligence", "payment"],
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  entityType: "diligence" | "payment";
+  entityType!: "diligence" | "payment";
 
   @Column({ nullable: true })
-  paymentType?: string; // Usar "?" para propriedades opcionais
+  paymentType?: string;
 
   @Column()
-  previousStatus: string;
+  previousStatus!: string;
 
   @Column()
-  newStatus: string;
+  newStatus!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "userId" })
-  user: User;
+  user!: User;
 
   @Column()
-  userId: string;
+  userId!: string;
 
-  @Column("text", { nullable: true }) // Razão pode ser opcional
-  reason?: string; // Usar "?" para propriedades opcionais
+  @Column("text", { nullable: true })
+  reason?: string;
 
   @CreateDateColumn()
-  timestamp: Date;
-
-  // @UpdateDateColumn() // Opcional: Adicione se precisar de uma coluna de data de atualização
-  // updatedAt: Date;
+  timestamp!: Date;
 }

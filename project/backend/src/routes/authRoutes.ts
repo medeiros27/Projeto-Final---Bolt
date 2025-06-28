@@ -8,4 +8,4 @@ router.post("/login", authController.login);
 router.post("/register/client", authController.registerClient);
 router.post("/register/correspondent", authController.registerCorrespondent);
 
-export { router as authRoutes };
+export default router; // CORREÇÃO: Exportação padrão

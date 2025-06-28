@@ -2,33 +2,75 @@ import { Router } from "express";
 import { DiligenceController } from "../controllers/DiligenceController";
 import { authMiddleware, checkRole } from "../middlewares/authMiddleware";
 
-const diligenceRoutes = Router();
+const router = Router();
 const diligenceController = new DiligenceController();
 
-// Aplica a autenticação a todas as rotas de diligência
-diligenceRoutes.use(authMiddleware);
+// Rotas de acesso público ou para todos os usuários autenticados
+router.use(authMiddleware); // Aplica o middleware de autenticação a todas as rotas abaixo
 
-/**
- * ROTA PRINCIPAL E UNIFICADA
- * GET /diligences -> Retorna a lista de diligências apropriada para o utilizador logado.
- */
-diligenceRoutes.get("/", diligenceController.getAll);
+// Rotas para todos os usuários autenticados
+router.get("/", diligenceController.getAllDiligences); // Corrigido de getAll para getAllDiligences
+router.get("/:id", diligenceController.getDiligenceById); // Corrigido de getById para getDiligenceById
 
-/**
- * GET /diligences/available -> Rota específica para correspondentes
- */
-// A rota original para availableDiligences pode ser mantida se houver lógica específica
-// diligenceRoutes.get("/available", checkRole(["correspondent"]), diligenceController.getAvailableDiligences);
+// Rotas específicas para clientes
+router.post(
+  "/",
+  checkRole(["admin", "client"]),
+  diligenceController.createDiligence // Corrigido de create para createDiligence
+);
+router.get(
+  "/client/my-diligences",
+  checkRole(["client"]),
+  diligenceController.getClientDiligences
+);
 
+// Rotas específicas para correspondentes
+router.get(
+  "/correspondent/my-diligences",
+  checkRole(["correspondent"]),
+  diligenceController.getCorrespondentDiligences
+);
+router.get(
+  "/available",
+  checkRole(["correspondent"]),
+  diligenceController.getAvailableDiligences
+);
+router.patch(
+  "/:id/assign",
+  checkRole(["admin"]),
+  diligenceController.assignDiligence // Corrigido de assign para assignDiligence
+);
+router.patch(
+  "/:id/accept",
+  checkRole(["correspondent"]),
+  diligenceController.acceptDiligence // Corrigido de accept para acceptDiligence
+);
+router.patch(
+  "/:id/start",
+  checkRole(["correspondent"]),
+  diligenceController.startDiligence
+);
+router.patch(
+  "/:id/complete",
+  checkRole(["correspondent"]),
+  diligenceController.completeDiligence
+);
 
-// Rota para criar diligência
-diligenceRoutes.post("/", checkRole(["admin", "client"]), diligenceController.create);
+// Rotas para administradores (ou usuários com permissão para alterar status)
+router.patch(
+  "/:id/status",
+  checkRole(["admin", "client", "correspondent"]),
+  diligenceController.updateDiligenceStatus
+);
+router.patch(
+  "/:id/revert-status",
+  checkRole(["admin"]),
+  diligenceController.revertDiligenceStatus
+);
+router.get(
+  "/:id/history",
+  checkRole(["admin", "client", "correspondent"]),
+  diligenceController.getDiligenceStatusHistory
+);
 
-// Rotas com ID devem vir depois
-diligenceRoutes.get("/:id", diligenceController.getById);
-diligenceRoutes.patch("/:id/assign", checkRole(["admin"]), diligenceController.assign);
-diligenceRoutes.patch("/:id/accept", checkRole(["correspondent"]), diligenceController.accept);
-
-// ... Adicione aqui as outras rotas PATCH, POST, GET com :id que você tinha ...
-
-export { diligenceRoutes };
+export default router;

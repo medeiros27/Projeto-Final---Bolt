@@ -13,68 +13,66 @@ import { User } from "./User";
 @Entity("payments")
 export class Payment {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @ManyToOne(() => Diligence, (diligence) => diligence.payments)
   @JoinColumn({ name: "diligenceId" })
-  diligence: Diligence;
+  diligence!: Diligence;
 
   @Column()
-  diligenceId: string;
+  diligenceId!: string;
 
   @Column({
     type: "enum",
     enum: ["client_payment", "correspondent_payment"],
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  type: "client_payment" | "correspondent_payment";
+  type!: "client_payment" | "correspondent_payment";
 
   @Column("decimal", { precision: 10, scale: 2 })
-  amount: number;
+  amount!: number;
 
   @Column({
     type: "enum",
     enum: ["pending", "processing", "completed", "failed", "cancelled"],
     default: "pending",
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  status: "pending" | "processing" | "completed" | "failed" | "cancelled";
+  status!: "pending" | "processing" | "completed" | "failed" | "cancelled";
 
   @Column({ default: "pix" })
-  method: string;
+  method!: string;
 
   @Column({ nullable: true })
-  pixKey?: string; // Usar "?" para propriedades opcionais
+  pixKey?: string;
 
   @Column({ type: "timestamp", nullable: true })
-  dueDate?: Date; // Usar "?" para propriedades opcionais
+  dueDate?: Date;
 
   @Column({ type: "timestamp", nullable: true })
-  paidDate?: Date; // Usar "?" para propriedades opcionais
+  paidDate?: Date;
 
   @Column({ nullable: true })
-  transactionId?: string; // Usar "?" para propriedades opcionais
+  transactionId?: string;
 
   @Column({ nullable: true })
-  notes?: string; // Usar "?" para propriedades opcionais
+  notes?: string;
 
   @ManyToOne(() => User, (user) => user.clientPayments, { nullable: true })
   @JoinColumn({ name: "clientId" })
-  client?: User; // Usar "?" para indicar que pode ser undefined
+  client?: User;
 
   @Column({ nullable: true })
-  clientId?: string; // Usar "?" para indicar que pode ser undefined
+  clientId?: string;
 
   @ManyToOne(() => User, (user) => user.correspondentPayments, { nullable: true })
   @JoinColumn({ name: "correspondentId" })
-  correspondent?: User; // Usar "?" para indicar que pode ser undefined
+  correspondent?: User;
 
   @Column({ nullable: true })
-  correspondentId?: string; // Usar "?" para indicar que pode ser undefined
+  correspondentId?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

@@ -14,65 +14,63 @@ import { User } from "./User";
 @Entity("payment_proofs")
 export class PaymentProof {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @OneToOne(() => Diligence, (diligence) => diligence.paymentProof)
   @JoinColumn({ name: "diligenceId" })
-  diligence: Diligence;
+  diligence!: Diligence;
 
   @Column()
-  diligenceId: string;
+  diligenceId!: string;
 
   @Column({
     type: "enum",
     enum: ["client_payment", "correspondent_payment"],
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  type: "client_payment" | "correspondent_payment";
+  type!: "client_payment" | "correspondent_payment";
 
   @Column("decimal", { precision: 10, scale: 2 })
-  amount: number;
+  amount!: number;
 
   @Column({ nullable: true })
-  pixKey?: string; // Usar "?" para propriedades opcionais
+  pixKey?: string;
 
   @Column()
-  proofImage: string;
+  proofImage!: string;
 
   @Column({
     type: "enum",
     enum: ["pending_verification", "verified", "rejected"],
     default: "pending_verification",
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  status: "pending_verification" | "verified" | "rejected";
+  status!: "pending_verification" | "verified" | "rejected";
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "uploadedById" })
-  uploadedBy: User;
+  uploadedBy!: User;
 
   @Column()
-  uploadedById: string;
+  uploadedById!: string;
 
   @CreateDateColumn()
-  uploadedAt: Date;
+  uploadedAt!: Date;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: "verifiedById" })
-  verifiedBy?: User; // Usar "?" para indicar que pode ser undefined
+  verifiedBy?: User;
 
   @Column({ nullable: true })
-  verifiedById?: string; // Usar "?" para indicar que pode ser undefined
+  verifiedById?: string;
 
   @Column({ type: "timestamp", nullable: true })
-  verifiedAt?: Date; // Usar "?" para propriedades opcionais
+  verifiedAt?: Date;
 
   @Column({ nullable: true })
-  rejectionReason?: string; // Usar "?" para propriedades opcionais
+  rejectionReason?: string;
 
   @Column({ nullable: true })
-  notes?: string; // Usar "?" para propriedades opcionais
+  notes?: string;
 
-  @UpdateDateColumn() // Adicionado UpdateDateColumn, comum em entidades
-  updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

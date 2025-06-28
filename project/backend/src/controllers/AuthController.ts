@@ -100,8 +100,7 @@ export class AuthController {
       state,
       specialties,
       coverage,
-      experience,
-      education,
+      // Removido experience e education, pois não estão na entidade User
     } = req.body;
 
     if (!name || !email || !password || !oab || !city || !state) {
@@ -118,8 +117,7 @@ export class AuthController {
       state,
       specialties,
       coverage,
-      experience,
-      education,
+      // Removido experience e education do objeto passado
     });
 
     return res.status(201).json({

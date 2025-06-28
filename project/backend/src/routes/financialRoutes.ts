@@ -47,4 +47,5 @@ financialRoutes.get(
     // financialController.getCorrespondentFinancialData 
 );
 
-export { financialRoutes };
+export default router;
+

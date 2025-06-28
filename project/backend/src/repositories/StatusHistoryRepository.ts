@@ -7,9 +7,10 @@ export class StatusHistoryRepository extends Repository<StatusHistory> {
     super(StatusHistory, AppDataSource.manager);
   }
 
-  async create(statusHistoryData: Partial<StatusHistory>): Promise<StatusHistory> {
-    const statusHistory = this.create(statusHistoryData);
-    return this.save(statusHistory);
+  // Renomeado de 'create' para 'createStatusHistory' para evitar conflito com o método base do TypeORM
+  async createStatusHistory(statusHistoryData: Partial<StatusHistory>): Promise<StatusHistory> {
+    const statusHistory = this.create(statusHistoryData); // Usa o método 'create' da classe base Repository
+    return this.save(statusHistory); // Usa o método 'save' da classe base Repository
   }
 
   async findByDiligenceId(diligenceId: string): Promise<StatusHistory[]> {
@@ -39,11 +40,6 @@ export class StatusHistoryRepository extends Repository<StatusHistory> {
   }
 
   async findAll(): Promise<StatusHistory[]> {
-    return this.find({
-      relations: ["user"],
-      order: {
-        timestamp: "DESC",
-      },
-    });
+    return this.find();
   }
 }

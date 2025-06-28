@@ -18,74 +18,72 @@ import { StatusHistory } from "./StatusHistory";
 @Entity("diligences")
 export class Diligence {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column("text")
-  description: string;
+  description!: string;
 
   @Column()
-  type: string;
+  type!: string;
 
   @Column({
     type: "enum",
     enum: ["pending", "assigned", "in_progress", "completed", "cancelled", "disputed"],
     default: "pending",
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  status: "pending" | "assigned" | "in_progress" | "completed" | "cancelled" | "disputed";
+  status!: "pending" | "assigned" | "in_progress" | "completed" | "cancelled" | "disputed";
 
   @Column({
     type: "enum",
     enum: ["low", "medium", "high", "urgent"],
     default: "medium",
   })
-  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
-  priority: "low" | "medium" | "high" | "urgent";
+  priority!: "low" | "medium" | "high" | "urgent";
 
   @Column("decimal", { precision: 10, scale: 2 })
-  value: number;
+  value!: number;
 
   @Column({ type: "timestamp" })
-  deadline: Date; // O TypeORM gerencia isso como um objeto Date
+  deadline!: Date;
 
   @Column()
-  city: string;
+  city!: string;
 
   @Column()
-  state: string;
+  state!: string;
 
   @ManyToOne(() => User, (user) => user.clientDiligences)
   @JoinColumn({ name: "clientId" })
-  client: User;
+  client!: User;
 
   @Column()
-  clientId: string;
+  clientId!: string;
 
   @ManyToOne(() => User, (user) => user.correspondentDiligences, { nullable: true })
   @JoinColumn({ name: "correspondentId" })
-  correspondent?: User; // Usar "?" para indicar que pode ser undefined
+  correspondent?: User;
 
   @Column({ nullable: true })
-  correspondentId?: string; // Usar "?" para indicar que pode ser undefined
+  correspondentId?: string;
 
   @OneToMany(() => Attachment, (attachment) => attachment.diligence)
-  attachments: Attachment[];
+  attachments!: Attachment[];
 
   @OneToMany(() => Payment, (payment) => payment.diligence)
-  payments: Payment[];
+  payments!: Payment[];
 
   @OneToOne(() => PaymentProof, (paymentProof) => paymentProof.diligence, { nullable: true })
-  paymentProof?: PaymentProof; // Usar "?" para indicar que pode ser undefined
+  paymentProof?: PaymentProof;
 
   @OneToMany(() => StatusHistory, (statusHistory) => statusHistory.diligence)
-  statusHistory: StatusHistory[];
+  statusHistory!: StatusHistory[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
