@@ -2,50 +2,46 @@ import { Router } from "express";
 import { FinancialController } from "../controllers/FinancialController";
 import { authMiddleware, checkRole } from "../middlewares/authMiddleware";
 
-const financialRoutes = Router();
+const router = Router(); // CORREÇÃO: Declaração e inicialização da variável router
 const financialController = new FinancialController();
 
-// Todas as rotas financeiras requerem autenticação, aplicado a todo o router.
-financialRoutes.use(authMiddleware);
+// Middleware de autenticação para todas as rotas financeiras
+router.use(authMiddleware);
 
-// --- Rotas para Administradores ---
-financialRoutes.get("/summary", checkRole(["admin"]), financialController.getFinancialSummary);
-financialRoutes.get("/data", checkRole(["admin"]), financialController.getAllFinancialData);
-
-// Rota para verificar comprovativo de pagamento
-financialRoutes.patch(
-    "/payment-proof/:proofId/verify", 
-    checkRole(["admin"]), 
-    financialController.verifyPaymentProof
+// Rotas para clientes
+router.post(
+  "/proof/upload",
+  checkRole(["client"]),
+  financialController.uploadPaymentProof
+);
+router.get(
+  "/proof/diligence/:diligenceId",
+  checkRole(["client", "correspondent", "admin"]),
+  financialController.getPaymentProofByDiligenceId
 );
 
-// --- Rotas para Utilizadores Autenticados (com lógica de permissão no serviço) ---
-financialRoutes.get(
-    "/diligence/:id", 
-    financialController.getFinancialDataByDiligence
+// Rotas para correspondentes
+router.get(
+  "/correspondent/payments",
+  checkRole(["correspondent"]),
+  financialController.getCorrespondentPayments
+);
+router.put(
+  "/correspondent/payments/:id/status",
+  checkRole(["correspondent"]),
+  financialController.updatePaymentStatusByCorrespondent
 );
 
-// Rota para cliente submeter comprovativo
-financialRoutes.post(
-    "/payment-proof/:diligenceId", 
-    checkRole(["client"]), 
-    financialController.submitPaymentProof
+// Rotas para administradores
+router.get(
+  "/admin/payments",
+  checkRole(["admin"]),
+  financialController.getAllPayments
 );
-
-// --- Rotas Específicas de Perfil ---
-financialRoutes.get(
-    "/client-data", 
-    checkRole(["client"]), 
-    // Supondo que você terá um método para isto no seu controlador
-    // financialController.getClientFinancialData 
-);
-
-financialRoutes.get(
-    "/correspondent-data", 
-    checkRole(["correspondent"]), 
-    // Supondo que você terá um método para isto no seu controlador
-    // financialController.getCorrespondentFinancialData 
+router.put(
+  "/admin/payments/:id/status",
+  checkRole(["admin"]),
+  financialController.updatePaymentStatusByAdmin
 );
 
 export default router;
-

@@ -45,7 +45,6 @@ class StatusManagementService {
       throw new AppError("Diligência não encontrada", 404);
     }
 
-    // CORREÇÃO: Fazer o cast explícito para o tipo de ENUM
     const newStatus = targetStatus as "pending" | "assigned" | "in_progress" | "completed" | "cancelled" | "disputed";
 
     await this.diligenceRepository.updateDiligence(diligenceId, { status: newStatus });
@@ -72,7 +71,6 @@ class StatusManagementService {
       throw new AppError("Pagamento não encontrado", 404);
     }
 
-    // CORREÇÃO: Fazer o cast explícito para o tipo de ENUM
     const newStatus = targetStatus as "pending" | "processing" | "completed" | "failed" | "cancelled";
 
     await this.paymentRepository.update(paymentId, { status: newStatus });
@@ -91,6 +89,49 @@ class StatusManagementService {
       throw new AppError("Erro ao buscar pagamento atualizado", 500);
     }
     return updatedPayment;
+  }
+
+  async revertStatus(
+    entityId: string,
+    entityType: 'diligence' | 'payment',
+    targetStatus: string | null,
+    userId: string,
+    reason: string,
+    paymentType?: 'client' | 'correspondent'
+  ) {
+    if (entityType === 'diligence') {
+      const diligence = await this.diligenceRepository.findById(entityId);
+      if (!diligence) throw new AppError('Diligência não encontrada', 404);
+      
+      await this.statusHistoryRepository.createStatusHistory({
+        diligenceId: entityId,
+        entityType,
+        previousStatus: diligence.status,
+        newStatus: targetStatus || "reverted",
+        userId,
+        reason
+      });
+
+      await this.diligenceRepository.updateDiligence(entityId, { 
+        status: (targetStatus || "pending") as "pending" | "assigned" | "in_progress" | "completed" | "cancelled" | "disputed"
+      });
+    } else if (entityType === 'payment') {
+      const payment = await this.paymentRepository.findById(entityId);
+      if (!payment) throw new AppError('Pagamento não encontrado', 404);
+      
+      await this.statusHistoryRepository.createStatusHistory({
+        paymentId: entityId,
+        entityType,
+        previousStatus: payment.status,
+        newStatus: targetStatus || "reverted",
+        userId,
+        reason
+      });
+
+      await this.paymentRepository.update(entityId, { 
+        status: (targetStatus || "pending") as "pending" | "processing" | "completed" | "failed" | "cancelled"
+      });
+    }
   }
 }
 

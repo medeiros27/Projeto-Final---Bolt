@@ -6,10 +6,8 @@ import { AppError } from "../middlewares/errorHandler";
 import { IAuthRequest } from "../middlewares/authMiddleware";
 
 // Importar as instâncias de serviço
-import diligenceService from "../services/DiligenceService";
-import statusManagementService from "../services/statusManagementService"; // CORREÇÃO: Usar 's' minúsculo
-
-
+import diligenceService from "../services/diligenceService"; // CORREÇÃO: nome correto do arquivo
+import statusManagementService from "../services/statusManagementService"; // CORREÇÃO: nome correto do arquivo
 
 const ALLOWED_DILIGENCE_STATUSES = ["pending", "assigned", "in_progress", "completed", "cancelled", "disputed"];
 
@@ -24,94 +22,41 @@ export class DiligenceController {
     this.statusHistoryRepository = new StatusHistoryRepository();
   }
 
+  createDiligence = async (req: Request, res: Response): Promise<Response> => {
+    const authRequest = req as IAuthRequest;
+    const userId = authRequest.user?.id;
+    if (!userId) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
+    const diligence = await diligenceService.createDiligence(req.body, userId);
+    return res.status(201).json(diligence);
+  };
+
   getAllDiligences = async (req: Request, res: Response): Promise<Response> => {
     const diligences = await this.diligenceRepository.findAll();
     return res.json(diligences);
   };
 
   getDiligenceById = async (req: Request, res: Response): Promise<Response> => {
-    const authRequest = req as IAuthRequest;
     const { id } = req.params;
     const diligence = await this.diligenceRepository.findById(id);
-
+    
     if (!diligence) {
       throw new AppError("Diligência não encontrada", 404);
     }
-
-    if (
-      authRequest.user?.role !== "admin" &&
-      diligence.clientId !== authRequest.user?.id &&
-      diligence.correspondentId !== authRequest.user?.id
-    ) {
-      throw new AppError("Acesso negado", 403);
-    }
-
+    
     return res.json(diligence);
   };
 
-  createDiligence = async (req: Request, res: Response): Promise<Response> => {
-    const authRequest = req as IAuthRequest;
-    const {
-      title,
-      description,
-      type,
-      priority,
-      value,
-      deadline,
-      city,
-      state,
-      clientId,
-      correspondentId,
-    } = req.body;
-
-    if (!title || !description || !type || !value || !deadline || !city || !state) {
-      throw new AppError("Dados obrigatórios não fornecidos", 400);
-    }
-
-    let actualClientId = clientId;
-    if (authRequest.user?.role !== "admin") {
-      actualClientId = authRequest.user?.id;
-    } else if (!clientId) {
-      throw new AppError("ID do cliente é obrigatório para administradores", 400);
-    }
-
-    if (!actualClientId) {
-      throw new AppError("Usuário criador não pôde ser determinado.", 401);
-    }
-
-    // SOLUÇÃO: Passar o segundo argumento 'creatorId' para a função.
-    const diligence = await diligenceService.createDiligence({
-      title,
-      description,
-      type,
-      priority,
-      value,
-      deadline,
-      city,
-      state,
-      clientId: actualClientId,
-      correspondentId,
-    }, actualClientId);
-
-    return res.status(201).json(diligence);
-  };
-
-  getClientDiligences = async (req: Request, res: Response): Promise<Response> => {
-    const authRequest = req as IAuthRequest;
-    const clientId = authRequest.user?.id;
-    if (!clientId) {
-      throw new AppError("Usuário não autenticado", 401);
-    }
+  getDiligencesByClient = async (req: Request, res: Response): Promise<Response> => {
+    const { clientId } = req.params;
     const diligences = await this.diligenceRepository.findByClient(clientId);
     return res.json(diligences);
   };
 
-  getCorrespondentDiligences = async (req: Request, res: Response): Promise<Response> => {
-    const authRequest = req as IAuthRequest;
-    const correspondentId = authRequest.user?.id;
-    if (!correspondentId) {
-      throw new AppError("Usuário não autenticado", 401);
-    }
+  getDiligencesByCorrespondent = async (req: Request, res: Response): Promise<Response> => {
+    const { correspondentId } = req.params;
     const diligences = await this.diligenceRepository.findByCorrespondent(correspondentId);
     return res.json(diligences);
   };
@@ -155,7 +100,6 @@ export class DiligenceController {
     if (!correspondentId) {
       throw new AppError("Usuário não autenticado", 401);
     }
-    // SOLUÇÃO: Corrigir o número de argumentos, removendo a "razão"
     const diligence = await diligenceService.updateDiligenceStatus(
       id,
       "in_progress",
@@ -171,7 +115,6 @@ export class DiligenceController {
     if (!correspondentId) {
       throw new AppError("Usuário não autenticado", 401);
     }
-    // SOLUÇÃO: Corrigir o número de argumentos, removendo a "razão"
     const diligence = await diligenceService.updateDiligenceStatus(
       id,
       "completed",
@@ -217,12 +160,17 @@ export class DiligenceController {
       throw new AppError("Motivo da reversão é obrigatório", 400);
     }
 
-    const result = await statusManagementService.updateDiligenceStatus(
-    diligenceId,
-    "pending", // ou o status para o qual você quer reverter
-    req.user.id,
-    "Status revertido pelo usuário"
-);
+    await statusManagementService.revertStatus(
+      id,
+      "diligence",
+      targetStatus,
+      userId,
+      reason
+    );
+
+    const updatedDiligence = await this.diligenceRepository.findById(id);
+    return res.json(updatedDiligence);
+  };
 
   getDiligenceStatusHistory = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
@@ -230,3 +178,4 @@ export class DiligenceController {
     return res.json(statusHistory);
   };
 }
+
