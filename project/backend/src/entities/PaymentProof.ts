@@ -27,13 +27,14 @@ export class PaymentProof {
     type: "enum",
     enum: ["client_payment", "correspondent_payment"],
   })
-  type: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  type: "client_payment" | "correspondent_payment";
 
   @Column("decimal", { precision: 10, scale: 2 })
   amount: number;
 
   @Column({ nullable: true })
-  pixKey: string;
+  pixKey?: string; // Usar "?" para propriedades opcionais
 
   @Column()
   proofImage: string;
@@ -43,7 +44,8 @@ export class PaymentProof {
     enum: ["pending_verification", "verified", "rejected"],
     default: "pending_verification",
   })
-  status: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  status: "pending_verification" | "verified" | "rejected";
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "uploadedById" })
@@ -57,17 +59,20 @@ export class PaymentProof {
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: "verifiedById" })
-  verifiedBy: User;
+  verifiedBy?: User; // Usar "?" para indicar que pode ser undefined
 
   @Column({ nullable: true })
-  verifiedById: string;
+  verifiedById?: string; // Usar "?" para indicar que pode ser undefined
 
   @Column({ type: "timestamp", nullable: true })
-  verifiedAt: Date;
+  verifiedAt?: Date; // Usar "?" para propriedades opcionais
 
   @Column({ nullable: true })
-  rejectionReason: string;
+  rejectionReason?: string; // Usar "?" para propriedades opcionais
 
   @Column({ nullable: true })
-  notes: string;
+  notes?: string; // Usar "?" para propriedades opcionais
+
+  @UpdateDateColumn() // Adicionado UpdateDateColumn, comum em entidades
+  updatedAt: Date;
 }

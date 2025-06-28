@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  UpdateDateColumn, // Adicionado para consistência
   ManyToOne,
   JoinColumn,
 } from "typeorm";
@@ -21,7 +22,7 @@ export class Attachment {
   url: string;
 
   @Column()
-  type: string;
+  type: string; // Se houver tipos específicos (ex: 'image', 'pdf'), pode ser um enum
 
   @Column("int")
   size: number;
@@ -42,4 +43,7 @@ export class Attachment {
 
   @CreateDateColumn()
   uploadedAt: Date;
+
+  @UpdateDateColumn() // Adicionado para registrar a última atualização
+  updatedAt: Date;
 }

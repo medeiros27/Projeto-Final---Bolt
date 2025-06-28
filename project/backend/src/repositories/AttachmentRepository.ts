@@ -1,29 +1,27 @@
-import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Attachment } from "../entities/Attachment";
+import { Repository } from "typeorm";
 import { AppError } from "../middlewares/errorHandler";
 
-export class AttachmentRepository {
-  private repository: Repository<Attachment>;
-
+export class AttachmentRepository extends Repository<Attachment> {
   constructor() {
-    this.repository = AppDataSource.getRepository(Attachment);
+    super(Attachment, AppDataSource.manager);
   }
 
   async create(attachmentData: Partial<Attachment>): Promise<Attachment> {
-    const attachment = this.repository.create(attachmentData);
-    return this.repository.save(attachment);
+    const attachment = this.create(attachmentData);
+    return this.save(attachment);
   }
 
   async findById(id: string): Promise<Attachment | null> {
-    return this.repository.findOne({
+    return this.findOne({
       where: { id },
       relations: ["diligence", "uploadedBy"],
     });
   }
 
   async findByDiligence(diligenceId: string): Promise<Attachment[]> {
-    return this.repository.find({
+    return this.find({
       where: { diligenceId },
       relations: ["uploadedBy"],
       order: { uploadedAt: "DESC" },
@@ -31,6 +29,6 @@ export class AttachmentRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.repository.delete(id);
+    await this.delete(id);
   }
 }

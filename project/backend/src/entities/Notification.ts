@@ -30,7 +30,8 @@ export class Notification {
       "system_update",
     ],
   })
-  type: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  type: "diligence_assigned" | "payment_received" | "deadline_reminder" | "feedback_received" | "system_update";
 
   @Column()
   title: string;
@@ -39,11 +40,14 @@ export class Notification {
   message: string;
 
   @Column("jsonb", { nullable: true })
-  data: Record<string, any>;
+  data?: Record<string, any>; // Usar "?" para propriedades opcionais
 
   @Column({ default: false })
   read: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  // @UpdateDateColumn() // Opcional: Adicione se precisar de uma coluna de data de atualização
+  // updatedAt: Date;
 }

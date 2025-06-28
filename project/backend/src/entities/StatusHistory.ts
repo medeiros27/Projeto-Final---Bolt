@@ -14,24 +14,25 @@ export class StatusHistory {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @ManyToOne(() => Diligence, (diligence) => diligence.statusHistory)
+  @ManyToOne(() => Diligence, (diligence) => diligence.statusHistory, { nullable: true }) // Diligence pode ser opcional
   @JoinColumn({ name: "diligenceId" })
-  diligence: Diligence;
+  diligence?: Diligence; // Usar "?" para indicar que pode ser undefined
 
   @Column({ nullable: true })
-  diligenceId: string;
+  diligenceId?: string; // Usar "?" para propriedades opcionais
 
   @Column({ nullable: true })
-  paymentId: string;
+  paymentId?: string; // Usar "?" para propriedades opcionais
 
   @Column({
     type: "enum",
     enum: ["diligence", "payment"],
   })
-  entityType: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  entityType: "diligence" | "payment";
 
   @Column({ nullable: true })
-  paymentType: string;
+  paymentType?: string; // Usar "?" para propriedades opcionais
 
   @Column()
   previousStatus: string;
@@ -46,9 +47,12 @@ export class StatusHistory {
   @Column()
   userId: string;
 
-  @Column("text")
-  reason: string;
+  @Column("text", { nullable: true }) // Razão pode ser opcional
+  reason?: string; // Usar "?" para propriedades opcionais
 
   @CreateDateColumn()
   timestamp: Date;
+
+  // @UpdateDateColumn() // Opcional: Adicione se precisar de uma coluna de data de atualização
+  // updatedAt: Date;
 }

@@ -1,21 +1,19 @@
-import { Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { StatusHistory } from "../entities/StatusHistory";
+import { Repository } from "typeorm";
 
-export class StatusHistoryRepository {
-  private repository: Repository<StatusHistory>;
-
+export class StatusHistoryRepository extends Repository<StatusHistory> {
   constructor() {
-    this.repository = AppDataSource.getRepository(StatusHistory);
+    super(StatusHistory, AppDataSource.manager);
   }
 
   async create(statusHistoryData: Partial<StatusHistory>): Promise<StatusHistory> {
-    const statusHistory = this.repository.create(statusHistoryData);
-    return this.repository.save(statusHistory);
+    const statusHistory = this.create(statusHistoryData);
+    return this.save(statusHistory);
   }
 
   async findByDiligenceId(diligenceId: string): Promise<StatusHistory[]> {
-    return this.repository.find({
+    return this.find({
       where: {
         diligenceId,
         entityType: "diligence",
@@ -28,7 +26,7 @@ export class StatusHistoryRepository {
   }
 
   async findByPaymentId(paymentId: string): Promise<StatusHistory[]> {
-    return this.repository.find({
+    return this.find({
       where: {
         paymentId,
         entityType: "payment",
@@ -41,7 +39,7 @@ export class StatusHistoryRepository {
   }
 
   async findAll(): Promise<StatusHistory[]> {
-    return this.repository.find({
+    return this.find({
       relations: ["user"],
       order: {
         timestamp: "DESC",

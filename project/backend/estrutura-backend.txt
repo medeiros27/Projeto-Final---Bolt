@@ -1,0 +1,146 @@
+Listagem de caminhos de pasta
+O número de série do volume é 62AF-F371
+C:.
+|   .env
+|   estrutura-backend.txt
+|   package-lock.json
+|   package.json
+|   tsconfig.json
+|   
++---dist
+|   |   index.js
+|   |   
+|   +---controllers
+|   |       AttachmentController.js
+|   |       AuthController.js
+|   |       DiligenceController.js
+|   |       FinancialController.js
+|   |       NotificationController.js
+|   |       StatusManagementController.js
+|   |       UserController.js
+|   |       
+|   +---data
+|   |       mockData.js
+|   |       
+|   +---entities
+|   |       Attachment.js
+|   |       Diligence.js
+|   |       Notification.js
+|   |       Payment.js
+|   |       PaymentProof.js
+|   |       StatusHistory.js
+|   |       User.js
+|   |       
+|   +---middlewares
+|   |       authMiddleware.js
+|   |       errorHandler.js
+|   |       
+|   +---migrations
+|   |       1750980000000-CreateInitialSchema.js
+|   |       
+|   +---repositories
+|   |       AttachmentRepository.js
+|   |       DiligenceRepository.js
+|   |       FinancialRepository.js
+|   |       NotificationRepository.js
+|   |       StatusHistoryRepository.js
+|   |       UserRepository.js
+|   |       
+|   +---routes
+|   |       attachmentRoutes.js
+|   |       authRoutes.js
+|   |       diligenceRoutes.js
+|   |       financialRoutes.js
+|   |       notificationRoutes.js
+|   |       statusRoutes.js
+|   |       userRoutes.js
+|   |       
+|   +---scripts
+|   |       createDatabase.js
+|   |       seed.js
+|   |       
+|   +---services
+|   |       AuthService.js
+|   |       DiligenceService.js
+|   |       financialService.js
+|   |       notificationService.js
+|   |       platformService.js
+|   |       StatusManagementService.js
+|   |       userService.js
+|   |       
+|   \---types
+|           index.js
+|           
+\---src
+    |   data-source.ts
+    |   index.ts
+    |   
+    +---@types
+    |       express.d.ts
+    |       index.ts
+    |       
+    +---controllers
+    |       AttachmentController.ts
+    |       AuthController.ts
+    |       DiligenceController.ts
+    |       FinancialController.ts
+    |       NotificationController.ts
+    |       PlatformController.ts
+    |       StatusManagementController.ts
+    |       UserController.ts
+    |       
+    +---data
+    |       mockData.ts
+    |       
+    +---entities
+    |       Attachment.ts
+    |       Diligence.ts
+    |       Notification.ts
+    |       Payment.ts
+    |       PaymentProof.ts
+    |       StatusHistory.ts
+    |       User.ts
+    |       
+    +---middlewares
+    |       authMiddleware.ts
+    |       errorHandler.ts
+    |       
+    +---migrations
+    |       1750980000000-CreateInitialSchema.ts
+    |       
+    +---repositories
+    |       AttachmentRepository.ts
+    |       DiligenceRepository.ts
+    |       FinancialRepository.ts
+    |       NotificationRepository.ts
+    |       StatusHistoryRepository.ts
+    |       UserRepository.ts
+    |       
+    +---routes
+    |       attachmentRoutes.ts
+    |       authRoutes.ts
+    |       diligenceRoutes.ts
+    |       financialRoutes.ts
+    |       notificationRoutes.ts
+    |       platformRoutes.ts
+    |       statusRoutes.ts
+    |       userRoutes.ts
+    |       
+    +---scripts
+    |       createDatabase.ts
+    |       seed.ts
+    |       
+    +---services
+    |       AuthService.ts
+    |       DiligenceService.ts
+    |       FinancialService.ts
+    |       NotificationService.ts
+    |       platformService.ts
+    |       StatusManagementService.ts
+    |       userService.ts
+    |       
+    +---test
+    |   \---utils
+    \---types
+            express.d.ts
+            

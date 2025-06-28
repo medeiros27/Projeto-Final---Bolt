@@ -13,91 +13,91 @@ import { Payment } from "./Payment";
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string; // Adicionado '!'
 
   @Column()
-  name: string;
+  name!: string; // Adicionado '!'
 
   @Column({ unique: true })
-  email: string;
+  email!: string; // Adicionado '!'
 
   @Column({ select: false })
-  password: string;
+  password!: string; // Adicionado '!'
 
   @Column({
     type: "enum",
     enum: ["admin", "client", "correspondent"],
     default: "client",
   })
-  role: string;
+  role!: "admin" | "client" | "correspondent"; // Adicionado '!'
 
   @Column({
     type: "enum",
     enum: ["active", "pending", "inactive", "suspended"],
     default: "pending",
   })
-  status: string;
+  status!: "active" | "pending" | "inactive" | "suspended"; // Adicionado '!'
 
   @Column({ nullable: true })
-  phone: string;
+  phone?: string;
 
   @Column({ nullable: true })
-  oab: string;
+  oab?: string;
 
   @Column({ nullable: true })
-  city: string;
+  city?: string;
 
   @Column({ nullable: true })
-  state: string;
+  state?: string;
 
   @Column({ nullable: true })
-  companyName: string;
+  companyName?: string;
 
   @Column({ nullable: true })
-  cnpj: string;
+  cnpj?: string;
 
   @Column({ nullable: true })
-  address: string;
+  address?: string;
 
   @Column({ default: false })
-  verified: boolean;
+  verified!: boolean; // Adicionado '!'
 
   @Column("simple-array", { nullable: true })
-  specialties: string[];
+  specialties?: string[];
 
   @Column("simple-array", { nullable: true })
-  coverage: string[];
+  coverage?: string[];
 
   @Column({ type: "float", nullable: true })
-  rating: number;
+  rating?: number;
 
   @Column({ nullable: true })
-  totalDiligences: number;
+  totalDiligences?: number;
 
   @Column({ type: "float", nullable: true })
-  completionRate: number;
+  completionRate?: number;
 
   @Column({ type: "float", nullable: true })
-  responseTime: number;
+  responseTime?: number;
 
   @OneToMany(() => Diligence, (diligence) => diligence.client)
-  clientDiligences: Diligence[];
+  clientDiligences!: Diligence[]; // Adicionado '!'
 
   @OneToMany(() => Diligence, (diligence) => diligence.correspondent)
-  correspondentDiligences: Diligence[];
+  correspondentDiligences!: Diligence[]; // Adicionado '!'
 
   @OneToMany(() => Notification, (notification) => notification.user)
-  notifications: Notification[];
+  notifications!: Notification[]; // Adicionado '!'
 
   @OneToMany(() => Payment, (payment) => payment.client)
-  clientPayments: Payment[];
+  clientPayments!: Payment[]; // Adicionado '!'
 
   @OneToMany(() => Payment, (payment) => payment.correspondent)
-  correspondentPayments: Payment[];
+  correspondentPayments!: Payment[]; // Adicionado '!'
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date; // Adicionado '!'
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date; // Adicionado '!'
 }

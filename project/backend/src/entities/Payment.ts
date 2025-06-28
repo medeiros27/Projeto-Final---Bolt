@@ -26,7 +26,8 @@ export class Payment {
     type: "enum",
     enum: ["client_payment", "correspondent_payment"],
   })
-  type: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  type: "client_payment" | "correspondent_payment";
 
   @Column("decimal", { precision: 10, scale: 2 })
   amount: number;
@@ -36,39 +37,40 @@ export class Payment {
     enum: ["pending", "processing", "completed", "failed", "cancelled"],
     default: "pending",
   })
-  status: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  status: "pending" | "processing" | "completed" | "failed" | "cancelled";
 
   @Column({ default: "pix" })
   method: string;
 
   @Column({ nullable: true })
-  pixKey: string;
+  pixKey?: string; // Usar "?" para propriedades opcionais
 
   @Column({ type: "timestamp", nullable: true })
-  dueDate: Date;
+  dueDate?: Date; // Usar "?" para propriedades opcionais
 
   @Column({ type: "timestamp", nullable: true })
-  paidDate: Date;
+  paidDate?: Date; // Usar "?" para propriedades opcionais
 
   @Column({ nullable: true })
-  transactionId: string;
+  transactionId?: string; // Usar "?" para propriedades opcionais
 
   @Column({ nullable: true })
-  notes: string;
+  notes?: string; // Usar "?" para propriedades opcionais
 
   @ManyToOne(() => User, (user) => user.clientPayments, { nullable: true })
   @JoinColumn({ name: "clientId" })
-  client: User;
+  client?: User; // Usar "?" para indicar que pode ser undefined
 
   @Column({ nullable: true })
-  clientId: string;
+  clientId?: string; // Usar "?" para indicar que pode ser undefined
 
   @ManyToOne(() => User, (user) => user.correspondentPayments, { nullable: true })
   @JoinColumn({ name: "correspondentId" })
-  correspondent: User;
+  correspondent?: User; // Usar "?" para indicar que pode ser undefined
 
   @Column({ nullable: true })
-  correspondentId: string;
+  correspondentId?: string; // Usar "?" para indicar que pode ser undefined
 
   @CreateDateColumn()
   createdAt: Date;

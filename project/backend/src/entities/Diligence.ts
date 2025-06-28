@@ -34,20 +34,22 @@ export class Diligence {
     enum: ["pending", "assigned", "in_progress", "completed", "cancelled", "disputed"],
     default: "pending",
   })
-  status: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  status: "pending" | "assigned" | "in_progress" | "completed" | "cancelled" | "disputed";
 
   @Column({
     type: "enum",
     enum: ["low", "medium", "high", "urgent"],
     default: "medium",
   })
-  priority: string;
+  // Correção: Definir o tipo TypeScript para corresponder ao enum do TypeORM
+  priority: "low" | "medium" | "high" | "urgent";
 
   @Column("decimal", { precision: 10, scale: 2 })
   value: number;
 
   @Column({ type: "timestamp" })
-  deadline: Date;
+  deadline: Date; // O TypeORM gerencia isso como um objeto Date
 
   @Column()
   city: string;
@@ -64,10 +66,10 @@ export class Diligence {
 
   @ManyToOne(() => User, (user) => user.correspondentDiligences, { nullable: true })
   @JoinColumn({ name: "correspondentId" })
-  correspondent: User;
+  correspondent?: User; // Usar "?" para indicar que pode ser undefined
 
   @Column({ nullable: true })
-  correspondentId: string;
+  correspondentId?: string; // Usar "?" para indicar que pode ser undefined
 
   @OneToMany(() => Attachment, (attachment) => attachment.diligence)
   attachments: Attachment[];
@@ -76,7 +78,7 @@ export class Diligence {
   payments: Payment[];
 
   @OneToOne(() => PaymentProof, (paymentProof) => paymentProof.diligence, { nullable: true })
-  paymentProof: PaymentProof;
+  paymentProof?: PaymentProof; // Usar "?" para indicar que pode ser undefined
 
   @OneToMany(() => StatusHistory, (statusHistory) => statusHistory.diligence)
   statusHistory: StatusHistory[];

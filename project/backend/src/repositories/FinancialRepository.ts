@@ -13,7 +13,6 @@ export class FinancialRepository {
     this.paymentProofRepository = AppDataSource.getRepository(PaymentProof);
   }
 
-  // Métodos para Pagamentos
   async createPayment(paymentData: Partial<Payment>): Promise<Payment> {
     const payment = this.paymentRepository.create(paymentData);
     return this.paymentRepository.save(payment);
@@ -37,7 +36,6 @@ export class FinancialRepository {
     });
   }
     
-  // SOLUÇÃO: Adicionar o método que estava faltando.
   async findAllPayments(): Promise<Payment[]> {
     return this.paymentRepository.find({
         relations: ["diligence", "client", "correspondent"],
@@ -66,7 +64,6 @@ export class FinancialRepository {
     });
   }
 
-  // Métodos para Comprovantes de Pagamento
   async createPaymentProof(proofData: Partial<PaymentProof>): Promise<PaymentProof> {
     const proof = this.paymentProofRepository.create(proofData);
     return this.paymentProofRepository.save(proof);

@@ -1,40 +1,50 @@
 #!/bin/bash
 
 # Cores para output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
+GREEN=\'\\033[0;32m\'
+YELLOW=\'\\033[1;33m\'
+RED=\'\\033[0;31m\'
+NC=\'\\033[0m\' # No Color
 
 echo -e "${YELLOW}Iniciando configuração do banco de dados JurisConnect...${NC}"
 
-# Criar banco de dados
-echo -e "${YELLOW}Criando banco de dados...${NC}"
-npm run db:create
+# Define o diretório do backend
+# Certifique-se de que este caminho está correto em relação onde você executa o init-db.sh
+BACKEND_DIR="/home/ubuntu/Projeto-Final---Bolt/project/backend"
 
-# Verificar se o banco foi criado com sucesso
+# Mudar para o diretório do backend
+cd "$BACKEND_DIR" || { echo -e "${RED}Erro: Não foi possível navegar para o diretório do backend: $BACKEND_DIR${NC}"; exit 1; }
+
+# Compilar o backend para garantir que os scripts JS estejam atualizados
+echo -e "${YELLOW}Compilando o backend...${NC}"
+npm run build
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Erro ao criar o banco de dados. Verifique as credenciais no arquivo .env${NC}"
+    echo -e "${RED}Erro ao compilar o backend. Verifique as dependências e o código.${NC}"
+    exit 1
+fi
+
+# Criar banco de dados usando o script JS compilado
+echo -e "${YELLOW}Criando banco de dados...${NC}"
+# Executa o script compilado diretamente com node
+node dist/scripts/createDatabase.js
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Erro ao criar o banco de dados. Verifique as credenciais no arquivo .env e o log acima.${NC}"
     exit 1
 fi
 
 # Executar migrações
 echo -e "${YELLOW}Executando migrações...${NC}"
 npm run migration:run
-
-# Verificar se as migrações foram executadas com sucesso
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Erro ao executar as migrações.${NC}"
+    echo -e "${RED}Erro ao executar as migrações. Verifique o log acima.${NC}"
     exit 1
 fi
 
 # Executar seed
 echo -e "${YELLOW}Populando banco de dados com dados iniciais...${NC}"
 npm run seed
-
-# Verificar se o seed foi executado com sucesso
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Erro ao executar o seed.${NC}"
+    echo -e "${RED}Erro ao executar o seed. Verifique o log acima.${NC}"
     exit 1
 fi
 
